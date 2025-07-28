@@ -24,13 +24,54 @@ Agent本质上赋予大模型调用工具并采取行动的开发范式。
 5. 输出结果：想用户返回最终结果。
 
 ### MCP 增强了 RAG 和 Agent
+
 MCP(模型上下文协议)是一个开放协议，用于将AI连接到数据库和工具，就像专为LLM构建的API层一样。
 
-## 参考文档
+所有tools和servers都会从遵循MCP协议制定的标准定义共享接口。无需每个开发团队都分别构建一次性集成，而MCP client端的LLM可以无缝地接入该接口。
+对于RAG，MCP通过定义统一的SessionMessage协议和工具发现机制，使RAG能够无缝接入多源数据检索。只需一次集成即可动态检索检测并注入上下文。
+
+### A2A
+
+Agent2Agent协议，旨在为多Agent生态提供一套开放、标准、安全的互操作层，使不同的厂商、平台上的Agent能够动态发现、调用并协同完成复杂的任务，从而提升效率，优化成本。不同的Agent`说同一种语言`。
+
+* LLM：是Agent的大脑，负责处理信息、推理和决策。
+* MCP：负责模型和tools/资源的连接，是Agent的手，让Agent能够获取信息和执行操作。
+* A2A：负责Agent和Agant之间的通信，是Agent的嘴，让Agent能够相互交流、协作完成任务。
+
+#### A2A的5大核心设计原则
+
+1. 拥抱Agent能力
+2. 基于现有标准
+3. 企业级安全
+4. 长任务支持
+5. 多模态无差别
+
+#### A2A协作的角色
+
+1. 用户 User
+2. 客户端 Client
+3. 远程Agent RemoteAgent
+
+#### A2A协议的核心对象
+
+* Agent Card(Agent 名片)
+* Task(任务)
+* Artifact(成果)
+* Message(消息)
+
+#### A2A协议工作流程 
+
+1. 能力发现：每一个Agent都向A2A注册，A2A会返回每一个Agent的`Agent Card`
+2. 任务管理：Agent围绕`Task`对象展开协作。该对象具有生命周期、状态更新和最终产物(`Artifact`)，支持即时任务和长跑任务两种模式。
+3. 消息协作：双方可以互发消息，携带上下文，用户指令和中间产物；消息包含多个`parts`，每个part都指明内容类型，便于双方就UI呈现形式进行协商。
+4. 状态同步：Client Agent 和 Romote Client可以实时同步状态，并实时更新UI，确保用户看到最新的进度和结果。
+
+## 参考文献&专栏
 
 - [MCP 官方文档](https://github.com/microsoft/mcp)
-- [MCP & A2A 前沿实战课程](https://time.geekbang.com/column/article/882229)
-- [DeepSeek 应用开发实战课程](https://time.geekbang.com/column/intro/100995901)
+- [MCP & A2A 前沿实战课程](http://gk.link/a/12AGY)
+- [DeepSeek 应用开发实战课程](http://gk.link/a/12AGZ)
+
 
 ## 版权声明  
 本项目部分内容可能来源于网络，仅供学习交流。如涉及侵权，请通过邮件联系 samhoson@163.com，我们将第一时间处理。
